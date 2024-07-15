@@ -1,0 +1,76 @@
+#!/bin/bash
+
+check_file_access(){
+    if ! [[ "$1" == /* ]] ; then
+        path=.
+    fi
+    dirname "$1" | tr '/' $'\n' | while read part ; do
+        path="$path/$part"
+        # Check for execute permissions
+        if ! [[ -x "$path" ]] ; then
+            #echo "'$path' is blocking access." 
+            #flag=1
+            return 1
+        fi
+    done
+    if ! [[ -r "$1" ]] ; then
+        #echo "'$1' is not readable."
+        #flag=2
+        return 2
+    fi
+}
+
+uploadfile(){
+    resourceGroup="First"
+    #resourceGroup=$sg
+    storageAccount="clouduploadercli"
+    #storageAccount=$sa
+    container="uploads"
+    #container=$ctr
+    accountKey=$(az storage account keys list --resource-group $resourceGroup --account-name $storageAccount --query "[0].value" -o tsv)
+    az storage blob upload-batch 
+    --pattern "$1" 
+    --source . 
+    --destination $container 
+    --account-key $accountKey 
+    --account-name $storageAccount > /dev/null
+}
+
+progressBar(){
+   echo -ne '>>>                       [20%]\r'
+# some task
+sleep 2
+echo -ne '>>>>>>>                   [40%]\r'
+# some task
+sleep 2
+echo -ne '>>>>>>>>>>>>>>            [60%]\r'
+# some task
+sleep 2
+echo -ne '>>>>>>>>>>>>>>>>>>>>>>>   [80%]\r'
+# some task
+sleep 2
+echo -ne '>>>>>>>>>>>>>>>>>>>>>>>>>>[100%]\r'
+echo -ne '\n'
+}
+
+file=$1
+if [ -f $file ]
+then
+    #echo "$file exists"
+    check_file_access $file
+    res=$?
+    if [[  res  -eq 1 ]];
+    then
+        echo"'$path' is blocking access."
+    elif [[  res  -eq 2 ]];
+    then
+        echo "ERROR: '$1' is not readable."
+    else
+        echo "uploading $file to blob....."
+        #uploadfile $file
+        progressBar
+        echo "File uploaded successfully!!!"
+    fi
+else
+    echo " $file doesnot exists"
+fi

@@ -1,0 +1,30 @@
+#!/bin/bash
+storageAccount="clouduploadercli"
+location="eastus"
+resourceGroup="First"
+container="uploads"
+#creating storage account
+create_storage_acc(){
+az storage account create --name $storageAccount --location "$location" --resource-group $resourceGroup --sku Standard_LRS --encryption-services blob
+az storage account list -o table
+}
+
+#fetching the storage account key
+#fetch_storage_acc_key_create_container(){
+accountKey=$(az storage account keys list --resource-group $resourceGroup --account-name $storageAccount --query "[0].value" -o tsv)
+#echo $accountKey 
+
+#create container
+#create_container(){
+#az storage container create --account-name $storageAccount --account-key $accountKey --name $container
+#az storage container list --account-name $storageAccount --account-key $accountKey --query [].name
+#}
+
+#upload data to container
+upload_file(){
+az storage blob upload-batch --pattern "$1" --source . --destination $container --account-key $accountKey --account-name $storageAccount
+}
+
+#create_storage_acc
+#fetch_storage_acc_key_create_container
+upload_file
