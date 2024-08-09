@@ -2,10 +2,10 @@
 # install/update azurecli
 curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash &>/dev/null
 if command -v az &>/dev/null; then
-    echo 'Azure Cli installtion is complete and uptodate!'
-    export app_id =''
-    export secret =''
-    export tenant =''
+    echo 'Azure Cli installtion is complete and upto-date!'
+    export app_id
+    export secret
+    export tenant
     echo '************ENTER YOUR SERVICE PRINCIPAL CREDENTIALS************'
     read -p "application-id:" app_id
     read -p "password:" secret
@@ -20,7 +20,7 @@ if command -v az &>/dev/null; then
         if az login --service-principal -u $app_id -p $secret --tenant $tenant &>/dev/null; then
         # Get the service principal name
             sp_name=$(az ad sp show --id $app_id --query 'displayName' --output tsv)
-            echo "Logged in successfully as $sp_name"
+            echo "Logged in successfully via $sp_name"
             exit 0
         else
             echo "Error: Service principal login failed"
