@@ -6,7 +6,7 @@ if command -v az &>/dev/null; then
     export app_id =''
     export secret =''
     export tenant =''
-    echo '************ENTER YOUR SERVICE PRINCIPAL CREDENTIALS************
+    echo '************ENTER YOUR SERVICE PRINCIPAL CREDENTIALS************'
     read -p "application-id:" app_id
     read -p "password:" secret
     read -p "tenant:" tenant
