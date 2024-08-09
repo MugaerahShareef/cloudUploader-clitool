@@ -22,11 +22,8 @@ check_file_access(){
 
 uploadfile(){
     resourceGroup="First"
-    #resourceGroup=$sg
     storageAccount="clouduploadercli"
-    #storageAccount=$sa
     container="uploads"
-    #container=$ctr
     accountKey=$(az storage account keys list --resource-group $resourceGroup --account-name $storageAccount --query "[0].value" -o tsv)
     #check_blob
     flag=0
@@ -45,23 +42,6 @@ uploadfile(){
         return 0
     fi
     return -1
-}
-
-progressBar(){
-   echo -ne '>>>                       [20%]\r'
-# some task
-sleep 2
-echo -ne '>>>>>>>                   [40%]\r'
-# some task
-sleep 2
-echo -ne '>>>>>>>>>>>>>>            [60%]\r'
-# some task
-sleep 2
-echo -ne '>>>>>>>>>>>>>>>>>>>>>>>   [80%]\r'
-# some task
-sleep 2
-echo -ne '>>>>>>>>>>>>>>>>>>>>>>>>>>[100%]\r'
-echo -ne '\n'
 }
 
 file=$1

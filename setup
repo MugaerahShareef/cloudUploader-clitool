@@ -30,34 +30,3 @@ if command -v az &>/dev/null; then
 else
     echo "Error installing Azure CLI."
 fi
-
-
-# junkcode/just ignore
-<<com
-export usr
-export pass
-export tenant
-read -p "application-id:" app_id
-read -p "password:" secret
-read -p "tenant:" tenant
-
-if [[ -z "$usr" || -z "$pass" || -z "$tenant" ]]
-then
-    echo "Error: provide all required values"
-    exit 1
-fi
-
-
-az login --service-principal -u $app_id -p $secret --tenant $tenant &> /dev/null
-sp_name=$(az ad sp show --id $app_id --query  'displayName' -o tsv)
-echo "Logged in as $sp_name"
-
-if az login --service-principal -u $app_id -p $secret --tenant $tenant &>/dev/null; then
-    # Get the service principal name
-    sp_name=$(az ad sp show --id $app_id --query 'displayName' --output tsv)
-    echo "Logged in successfully as $sp_name"
-else
-    echo "Error: Service principal login failed"
-    exit 1
-fi
-com
